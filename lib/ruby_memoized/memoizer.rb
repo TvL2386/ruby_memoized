@@ -12,7 +12,11 @@ module RubyMemoized
       return cache[[args, kwargs, block]] if cache.has_key?([args, kwargs, block])
 
       if accepts_arguments
-        cache[[args, kwargs, block]] = context.send(method, *args, **kwargs, &block)
+        if kwargs.empty?
+          cache[[args, kwargs, block]] = context.send(method, *args, &block)
+        else
+          cache[[args, kwargs, block]] = context.send(method, *args, **kwargs, &block)
+        end
       else
         cache[[args, kwargs, block]] = context.send(method)
       end
